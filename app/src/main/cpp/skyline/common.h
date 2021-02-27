@@ -461,6 +461,35 @@ namespace skyline {
         }
     };
 
+    namespace Log {
+        void Write(Logger::LogLevel level, const std::string &str);
+
+        template<typename S, typename... Args>
+        inline void Error(const S &formatStr, Args &&... args) {
+            Write(Logger::LogLevel::Error, fmt::format(formatStr, util::FmtCast(args)...));
+        }
+
+        template<typename S, typename... Args>
+        inline void Warn(const S &formatStr, Args &&... args) {
+            Write(Logger::LogLevel::Warn, fmt::format(formatStr, util::FmtCast(args)...));
+        }
+
+        template<typename S, typename... Args>
+        inline void Info(const S &formatStr, Args &&... args) {
+            Write(Logger::LogLevel::Info, fmt::format(formatStr, util::FmtCast(args)...));
+        }
+
+        template<typename S, typename... Args>
+        inline void Debug(const S &formatStr, Args &&... args) {
+            Write(Logger::LogLevel::Debug, fmt::format(formatStr, util::FmtCast(args)...));
+        }
+
+        template<typename S, typename... Args>
+        inline void Verbose(const S &formatStr, Args &&... args) {
+            Write(Logger::LogLevel::Verbose, fmt::format(formatStr, util::FmtCast(args)...));
+        }
+    }
+
     class Settings;
     namespace nce {
         class NCE;

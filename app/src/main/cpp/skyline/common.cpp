@@ -52,6 +52,15 @@ namespace skyline {
         logFile << "\0361\035" << levelCharacter[static_cast<u8>(level)] << '\035' << threadName << '\035' << str << '\n'; // We use RS (\036) and GS (\035) as our delimiters
     }
 
+    void Log::Write(Logger::LogLevel level, const std::string &str) {
+        constexpr std::array<int, 5> levelAlog{ANDROID_LOG_ERROR, ANDROID_LOG_WARN, ANDROID_LOG_INFO, ANDROID_LOG_DEBUG, ANDROID_LOG_VERBOSE}; // This corresponds to LogLevel and provides it's equivalent for NDK Logging
+
+        if (logTag.empty())
+            Logger::UpdateTag();
+
+        __android_log_print(levelAlog[static_cast<u8>(level)], logTag.c_str(), "%s", str.c_str());
+    }
+
     DeviceState::DeviceState(kernel::OS *os, std::shared_ptr<JvmManager> jvmManager, std::shared_ptr<Settings> settings, std::shared_ptr<Logger> logger)
         : os(os), jvm(std::move(jvmManager)), settings(std::move(settings)), logger(std::move(logger)) {
         // We assign these later as they use the state in their constructor and we don't want null pointers
